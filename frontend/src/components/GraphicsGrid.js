@@ -93,6 +93,16 @@ export default ({search}) => {
                 .attr("r", 3.5*3)
                 .call(drag(simulation));
 
+                const text = svg.select(".nText")
+                .selectAll('text')
+                .data(nodes)
+                .join('text')
+                .text(d => d.data.id)
+                .attr('font-size', 15)
+                .attr('fill', 'white')
+                .attr('dx', 15)
+                .attr('dy', 4)
+
             node.append("title")
                 .text(d => d.data.id);
 
@@ -101,7 +111,10 @@ export default ({search}) => {
                   .attr("x1", d => d.source.x)
                   .attr("y1", d => d.source.y)
                   .attr("x2", d => d.target.x)
-                  .attr("y2", d => d.target.y);
+                  .attr("y2", d => d.target.y)
+              text
+                  .attr("x", node => node.x)
+                  .attr("y", node => node.y);
           
               node
                   .attr("cx", d => d.x)
@@ -116,6 +129,7 @@ export default ({search}) => {
         <svg className="graphics-grid" ref={graphicsD3}>
             <g className="link" id="link"></g>
             <g className="node" id="node"></g>
+            <g className="nText" id="nText"></g>
         </svg>
     )
 }
