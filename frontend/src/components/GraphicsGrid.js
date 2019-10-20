@@ -42,8 +42,6 @@ export default ({search}) => {
                     .on("drag", dragged)
                     .on("end", dragended);
               }
-            while (graphicsD3.current.firstChild)
-                graphicsD3.current.removeChild(graphicsD3.current.firstChild);
             const svg = d3.select(graphicsD3.current)
                 .attr("viewBox", [-width / 2, -height / 2, width, height]);
             const cm1 = data[Object.keys(data)[0]];
@@ -56,18 +54,18 @@ export default ({search}) => {
                 .force("charge", d3.forceManyBody().strength(-1000))
                 .force("x", d3.forceX())
                 .force("y", d3.forceY());
-
-                const link = svg.append("g")
+            
+            const link = svg.select(".link")
                 .attr("stroke", "#999")
                 .attr("stroke-opacity", 0.6)
               .selectAll("line")
               .data(links)
               .join("line");
-          
-            const node = svg.append("g")
+
+            const node = svg.select(".node")
                 .attr("fill", "#fff")
                 .attr("stroke", "#000")
-                .attr("stroke-width", 5)
+                .attr("stroke-width", 1)
               .selectAll("circle")
               .data(nodes)
               .join("circle")
@@ -115,6 +113,8 @@ export default ({search}) => {
 
     return (
         <svg className="graphics-grid" ref={graphicsD3}>
+            <g className="link" id="link"></g>
+            <g className="node" id="node"></g>
         </svg>
     )
 }
