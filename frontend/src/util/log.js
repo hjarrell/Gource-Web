@@ -79,9 +79,15 @@ export const getLog = (url) => {
                     }
                 }
 
-                hierByTime[key] = current
-                previous = current;
+                hierByTime[key] = current.slice(0)
+                previous = current.slice(0);
             }
             return hierByTime;
+        }).then((hier) => {
+            const commits = Object.keys(hier).map((key) => {
+                return [key, hier[key]];
+            });
+            commits.sort((a, b) => new Date(a) - new Date(b))
+            return commits;
         });
 }

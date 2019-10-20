@@ -5,18 +5,39 @@ import { getLog } from '../util/log';
 
 export default ({search}) => {
     const graphicsD3 = useRef(null);
-    const [data, setData] = useState({});
+    const [allData, setAllData] = useState([]);
+    const [index, setIndex] = useState(0);
+    const [data, setData] = useState([]);
+    const [title, setTitle] = useState("");
 
     useEffect(() => {
         if (search) {
             getLog(search)
-                .then((log) => setData(log))
-                .catch(() => setData([]))
+                .then((log) => setAllData(log) && setData([]) && setIndex(0))
+                .catch(() => setAllData({}) && setData([]))
         }
     }, [search]);
 
     useEffect(() => {
-        if (Object.entries(data).length !== 0 && graphicsD3.current) {
+        const interval = setInterval(() => {
+            console.log(allData.length)
+            if (allData.length > 0 && index < allData.length) {
+                setData(allData[index][1]);
+                setTitle(allData[index][0]);
+                setIndex(index + 1)
+            } else {
+                setIndex(0);
+            }
+        }, 1000);
+    
+        return () => {
+          clearInterval(interval);
+        };
+      }, [allData, index]);
+
+    useEffect(() => {
+        console.log(data)
+        if (data.length !== 0 && graphicsD3.current) {
             const width = 1200, height = 800;
             const drag = simulation => {
   
@@ -44,13 +65,12 @@ export default ({search}) => {
               }
             const svg = d3.select(graphicsD3.current)
                 .attr("viewBox", [-width / 2, -height / 2, width, height]);
-            const cm1 = data[Object.keys(data)[0]];
-            const root = d3.stratify()(cm1);
+            const root = d3.stratify()(data);
             const links = root.links();
             const nodes = root.descendants();
 
             const simulation = d3.forceSimulation(nodes)
-                .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
+                .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(0.6))
                 .force("charge", d3.forceManyBody().strength(-1000))
                 .force("x", d3.forceX())
                 .force("y", d3.forceY());
@@ -126,10 +146,15 @@ export default ({search}) => {
     }, [search, data, graphicsD3.current]);
 
     return (
+        <>
+        <div>
+            {title}
+        </div>
         <svg className="graphics-grid" ref={graphicsD3}>
             <g className="link" id="link"></g>
             <g className="node" id="node"></g>
             <g className="nText" id="nText"></g>
         </svg>
+        </>
     )
 }
