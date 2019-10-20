@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Example from './components/Example';
 import SearchBar from './components/SearchBar';
+import GraphicsGrid from './components/GraphicsGrid';
 
 function App() {
   const [search, setSearch] = useState('');
@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <h1>Git Visualization</h1>
       <SearchBar setSearch={setSearch} />
-      <Example search={search} />
+      <GraphicsGrid search={search} />
     </div>
   );
 }

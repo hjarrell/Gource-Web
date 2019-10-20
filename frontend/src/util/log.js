@@ -42,5 +42,46 @@ export const getLog = (url) => {
                 }
             }
             return allChanges;
+        }).then((data) => {
+            const hierByTime = {};
+            let previous = [
+                {id: 'root'}
+            ];
+
+            for (let commit of data) {
+                const key = commit.timestamp.toISOString();
+                let current = previous;
+                for (let del of commit.deletedFiles) {
+                    const split = ('root/' + del).split('/');
+                    const file = split[split.length - 1];
+                    const path = split.slice(0, split.length - 1).join('/');
+                    current = current.filter((val) => {
+                        return val.id !== file && val.parent !== path;
+                    });
+                }
+
+                for (let add of commit.addedFiles) {
+                    let split = ('root/' + add).split('/');
+                    const file = split[split.length - 1];
+                    let path = split.slice(0, split.length - 1).join('/');
+                    current.push({
+                        id: file,
+                        parentId: path,
+                        isDir: false,
+                    });
+                    split = path.split('/').slice(0, split.length - 1);
+                    while (path !== 'root') {
+                        split = path.split('/').slice(0, split.length - 1);
+                        if (current.findIndex(({id, parentId, isDir}) => id === path && parentId === split.join('/') && isDir === true) < 0) {
+                            current.push({id: path, parentId: split.join('/'), isDir: true})
+                        }
+                        path = split.join('/');
+                    }
+                }
+
+                hierByTime[key] = current
+                previous = current;
+            }
+            return hierByTime;
         });
 }

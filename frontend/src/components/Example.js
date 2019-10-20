@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
+import * as d3 from 'd3';
+
 import {getLog} from '../util/log';
 
 export default ({search}) => {
@@ -12,16 +14,7 @@ export default ({search}) => {
     }, [search]);
     return (
         <>
-        {nodes.map((node) => {
-            return (
-            <div>
-                <h2>{node.user} - {node.timestamp.toUTCString()}</h2>
-                <ul>
-                    {node.addedFiles.map((add) => <li>{add}</li>)}
-                </ul>
-            </div>
-            )
-        })}
+        {nodes && console.log(nodes)}
         </>
     )
 }
