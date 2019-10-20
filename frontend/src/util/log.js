@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
 export const getLog = (url) => {
-    return fetch(`http://fsu.hunterjarrell.com:5000/log?repo=${url}`)
+    return fetch(`https://fsu.hunterjarrell.com/log?repo=${url}`)
         .then((lines) => lines.text())
         .then((lines) => {
             let allChanges = [];
