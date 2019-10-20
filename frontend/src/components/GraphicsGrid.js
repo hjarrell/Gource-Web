@@ -69,7 +69,25 @@ export default ({search}) => {
               .selectAll("circle")
               .data(nodes)
               .join("circle")
-                .attr("fill", d => d.children ? null : "#000")
+                .attr("fill", d => {
+                  if (!d.children){
+                  switch(d.data.id.split(".")[d.data.id.split(".").length-1]){
+                    case "js": return("red")
+                      break;
+                    case "css": return("blue")
+                      break;
+                    case "html": return("orange")
+                      break;
+                    case "png": return("purple")
+                      break;
+                    case "md": return("pink")
+                      break;
+                    default: return("green")
+                  }
+                }else{
+                  return("gray")
+                }
+                })
                 .attr("stroke", d => d.children ? null : "#fff")
                 .attr("r", 3.5*7)
                 .call(drag(simulation));
