@@ -6,7 +6,9 @@ export default ({search}) => {
     const [nodes, setNodes] = useState([]);
     useEffect(() => {
         if (search)
-            getLog(search).then((a) => setNodes(a));
+            getLog(search)
+                .then((a) => setNodes(a))
+                .catch((a) => setNodes([]));
     }, [search]);
     return (
         <>
