@@ -64,7 +64,10 @@ export default ({search}) => {
                     .on("end", dragended);
               }
             const svg = d3.select(graphicsD3.current)
-                .attr("viewBox", [-width / 2, -height / 2, width, height]);
+                .attr("viewBox", [-width / 2, -height / 2, width, height])
+                .call(d3.zoom().on("zoom", function () {
+                  svg.attr("transform", d3.event.transform)
+               }))
             const root = d3.stratify()(data);
             const links = root.links();
             const nodes = root.descendants();
