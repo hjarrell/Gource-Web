@@ -73,7 +73,12 @@ export default ({
                 .attr("viewBox", [-width / 2, -height / 2, width, height])
                 .call(d3.zoom().on("zoom", function () {
                   svg.attr("transform", d3.event.transform)
-               }))
+                }))
+                  .on("mousedown.zoom", null)
+                  .on("touchstart.zoom", null)
+                  .on("touchmove.zoom", null)
+                  .on("touchend.zoom", null)
+               
             const root = d3.stratify()(data);
             const links = root.links();
             const nodes = root.descendants();
