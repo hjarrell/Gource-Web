@@ -78,10 +78,11 @@ export default ({search}) => {
                       break;
                     case "html": return("orange")
                       break;
-                    case "png": return("purple")
+                    case "png": return("yellow")
                       break;
                     case "md": return("pink")
                       break;
+                    case "py": return("purple")
                     default: return("green")
                   }
                 }else{
