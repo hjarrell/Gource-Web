@@ -16,9 +16,8 @@ export default ({search}) => {
     }, [search]);
 
     useEffect(() => {
-        console.log(data)
         if (Object.entries(data).length !== 0 && graphicsD3.current) {
-            const width = 1200, height = 1200;
+            const width = 1200, height = 800;
             const drag = simulation => {
   
                 function dragstarted(d) {
@@ -43,18 +42,21 @@ export default ({search}) => {
                     .on("drag", dragged)
                     .on("end", dragended);
               }
+            while (graphicsD3.current.firstChild)
+                graphicsD3.current.removeChild(graphicsD3.current.firstChild);
             const svg = d3.select(graphicsD3.current)
                 .attr("viewBox", [-width / 2, -height / 2, width, height]);
             const cm1 = data[Object.keys(data)[0]];
             const root = d3.stratify()(cm1);
             const links = root.links();
             const nodes = root.descendants();
+
             const simulation = d3.forceSimulation(nodes)
                 .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
-                .force("charge", d3.forceManyBody().strength(-4000))
+                .force("charge", d3.forceManyBody().strength(-1000))
                 .force("x", d3.forceX())
                 .force("y", d3.forceY());
-            
+
                 const link = svg.append("g")
                 .attr("stroke", "#999")
                 .attr("stroke-opacity", 0.6)
@@ -90,12 +92,12 @@ export default ({search}) => {
                 }
                 })
                 .attr("stroke", d => d.children ? null : "#fff")
-                .attr("r", 3.5*7)
+                .attr("r", 3.5*3)
                 .call(drag(simulation));
-          
+
             node.append("title")
-                .text(d => d.data.name);
-          
+                .text(d => d.data.id);
+
             simulation.on("tick", () => {
               link
                   .attr("x1", d => d.source.x)
